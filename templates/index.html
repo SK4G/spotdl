@@ -1,0 +1,17 @@
+
+
+{% block content %}
+    <h1></h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.spoturl.label }}<br>
+            {{ form.spoturl }}<br>
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    <audio controls>
+        <source src="{{url_for('download')}}'" type="audio/mp3">
+    </audio>
+    <a href="{{url_for('download')}}" download> song </a>
+{% endblock %}

@@ -1,0 +1,58 @@
+* {
+    font-family: Tahoma, sans-serif;
+}
+body{
+font-size: 150%;
+color: rgb(42, 42, 42);
+}
+.flex-container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+.flex-container > div {
+  background-color: #f1f1f1;
+  padding: 10px;
+  font-size: 30px;
+}
+.flex-container > p {
+  background-color: #f1f1f1;
+  padding: 10px;
+  font-size: 30px;
+  width: 80%;
+  text-align: center;
+  border-radius: 0px, 0px, 10px, 10px;
+}
+.flex-col {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  border-color: black;
+}
+.flex-col > p {
+  /* subtitle font */
+  margin: auto;
+  padding: 8px;
+  font-size: 40px;
+  font-weight: 1000;
+  width: 80%;
+  text-align: center;
+  border-color: black;
+  -webkit-text-stroke: 1px black;
+	-webkit-text-fill-color: white;
+}
+.flex-col > div {
+  background-color: #f1f1f1;
+  margin: auto;
+  padding: 8px;
+  font-size: 30px;
+  text-align: center;
+  border-color: black;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-radius: 0px 0px 10px 10px;
+}
+.flex-container > div:nth-child(2n+1){
+  clear:left
+}
