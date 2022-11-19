@@ -1,0 +1,55 @@
+<head>
+    <meta charset="UTF-8" />
+    <title>Upload</title>
+</head>
+
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>
+      <span>Upload music. Allowed extensions are mp3 and m4a</span>
+    </h1>
+    <hr>
+    <p>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+    </p>
+    <!-- <h3>Select a file to upload</h3> -->
+    <div class="flex-col">
+      <div>
+        <p>
+          <form action="/upload" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" />
+            <input type="submit" value="Submit" />
+          </form>
+        </p>
+      </div>
+    </div>
+{% endblock %}
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+

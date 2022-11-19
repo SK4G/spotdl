@@ -1,17 +1,27 @@
+<head>
+    <meta charset="UTF-8" />
+    <title>Spotipy</title>
+</head>
 
+{% extends "base.html" %}
 
 {% block content %}
-    <h1></h1>
+<h1>
+  <span>Enter spotify song, album, or playlist URL.</span>
+</h1>
+<hr>
+<div class="flex-col">
+  <div>
     <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.spoturl.label }}<br>
-            {{ form.spoturl }}<br>
-        </p>
-        <p>{{ form.submit() }}</p>
+      {{ form.hidden_tag() }}
+      <p>
+          {{ form.spoturl.label }}  <br>
+          {{ form.spoturl }}        <br>
+      </p>
+      <p> {{ form.submit() }} </p>
     </form>
-    <audio controls>
-        <source src="{{url_for('download')}}'" type="audio/mp3">
-    </audio>
-    <a href="{{url_for('download')}}" download> song </a>
+  </div>
+</div>
+
+</body>
 {% endblock %}

@@ -1,0 +1,21 @@
+<head>
+    <meta charset="UTF-8" />
+    <title>Music</title>
+</head>
+
+    {% extends "base.html" %}
+
+    {% block content %}
+        <body>
+            <h1>
+                <span>Music Database</span>
+            </h1>
+            <hr>
+            <div class="flex-col">
+                {% for file in files %}
+                <a href="{{ url_for('download', filename=file) }}">{{ file }}</a>
+                <br>
+                {% endfor %}
+            </div>
+        </body>
+    {% endblock %}

@@ -1,0 +1,34 @@
+  <!doctype html>
+  <html>
+      <head>
+        <link rel="stylesheet" href="/static/style.css">
+        {% if title %}
+        <title>{{ title }} - Spotipy</title>
+        {% else %}
+        <title>Spotipy</title>
+        {% endif %}
+
+        <!-- Highlights active navbar page -->
+        <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+            <script>
+                $(function(){
+                    $('a').each(function(){
+                        if ($(this).prop('href') == window.location.href) {
+                            $(this).addClass('active'); $(this).parents('li').addClass('active');
+                        }
+                    });
+                });
+            </script>
+      </head>
+
+      <body>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/upload">Upload</a></li>
+            <li><a href="/music">Music</a></li>
+        </ul>
+        <hr>
+
+        {% block content %}{% endblock %}
+      </body>
+  </html>
