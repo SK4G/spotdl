@@ -1,15 +1,20 @@
 import logging
 import os.path
 import os
-import sys
-
+from dotenv import load_dotenv
+load_dotenv()
+import flask
+from flask_sqlalchemy import SQLAlchemy
+import psycopg2
 from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
 from werkzeug.utils import secure_filename
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired
 from werkzeug.utils import secure_filename
-
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
+from flask_login import LoginManager
 from modules.spotmodule import dl
 
 # [logging config
@@ -20,8 +25,9 @@ logging.basicConfig(format='%(asctime)s:%(levelname)s:%(filename)s:%(funcName)s:
 
 
 app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+db = SQLAlchemy(app)
 app.secret_key = "secretpass"
-
 app.config['ALLOWED_EXTENSIONS'] = ['.mp3', '.m4a']
 app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024 # 20mb
 
@@ -79,8 +85,7 @@ def music_files():
             return redirect('/upload')
         else:
             logging.info('Invalid file extension.')
-            flash('Not allowed file type \
-                Invalid file extension. \
+            flash('Not allowed file type. \
                 \n Allowed extensions are mp3 and m4a. \
                 \n Max size is 20mb')
             return redirect(request.url)
@@ -96,7 +101,6 @@ def download(filename):
     return send_from_directory(full_path, filename, as_attachment=True)
 
 
-# http://localhost:5000/files
 @app.route('/music', methods=['GET'])
 def list_files():
     """Endpoint to list files."""
@@ -108,6 +112,51 @@ def list_files():
             music_files.append(filename)
 
     return render_template('music.html', files=music_files)
-    
 
-app.run(debug=False)
+
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember_me = BooleanField('Remember Me')
+    submit = SubmitField('Sign In')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        flash('Login requested for user {}, remember_me={}'.format(
+            form.username.data, form.remember_me.data))
+        return redirect(url_for('index'))
+    return render_template('login.html', title='Sign In', form=form)
+
+
+class Person(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128))
+    song = db.relationship('Song', backref='listeners', lazy='dynamic')
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    def __repr__(self) -> str:
+        return f"Person with username: {self.username} and email: {self.email}"
+
+class Song(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    song_name = db.Column(db.String(80), index=True)
+    artist = db.Column(db.String(80), index=True)
+    playlist = db.Column(db.String(80))
+    user_id = db.Column(db.Integer, db.ForeignKey('person.id'))
+    
+    def __repr__(self):
+        return f"{self.song_name}"
+
+# with app.app_context():
+#     db.create_all()
+
+
+# app.run(debug=False)
