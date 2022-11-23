@@ -11,7 +11,7 @@
                 <span>Music Database</span>
             </h1>
             <hr>
-            <div class="flex-col">
+            <div class="flex-container">
                 {% for file in files %}
                 <a href="{{ url_for('download', filename=file) }}">{{ file }}</a>
                 <br>
