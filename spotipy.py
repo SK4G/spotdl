@@ -49,7 +49,7 @@ def index():
     form = UrlForm()
     if form.validate_on_submit():
         dl(form.spoturl.data)
-        flash('Download Successful')
+        flash('Music succesfully downloaded to library.')
         # redirect(url_for('music'))
     return render_template('index.html', form = form)
 
@@ -159,4 +159,4 @@ class Song(db.Model):
 #     db.create_all()
 
 
-# app.run(debug=False)
+app.run(debug=False)

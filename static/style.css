@@ -34,6 +34,23 @@ h1 span{
   padding: 8px;
   font-size: 30px;
 }
+
+/* Music container */
+.flex-container {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  border-color: black;
+  border-radius: 8px;
+  background-color: #ddd;
+  width: 50%;
+  margin: 2em auto; 
+}
+.flex-container > div {
+  margin: auto;
+  padding: 8px;
+  font-size: 30px;
+}
 .flex-container > div:nth-child(2n+1){
   clear:left
 }
