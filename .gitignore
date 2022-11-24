@@ -5,6 +5,7 @@ test.py
 *.spotdl
 *.mp3
 *.m4a
+*.zip
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

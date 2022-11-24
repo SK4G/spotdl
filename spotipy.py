@@ -35,6 +35,11 @@ app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024 # 20mb
 MUSIC_FOLDER = 'music'
 if not os.path.exists(MUSIC_FOLDER):
     os.makedirs(MUSIC_FOLDER, exist_ok=True)
+    
+# folder to temp download and zip spoturl songs
+SPOTURL_FOLDER = 'spotify'
+if not os.path.exists('spotify'):
+    os.makedirs('spotify', exist_ok=True)
 
 MUSIC_FOLDER =  os.path.join(os.getcwd(), MUSIC_FOLDER)
 
@@ -50,7 +55,8 @@ def index():
     if form.validate_on_submit():
         # flash("Download in progress. Please wait")
         dl(form.spoturl.data)
-        flash('Music succesfully downloaded to library.')
+        flash('Music succesfully downloaded to library. \
+            spotify.zip contains all files from requested Spotify URL')
         # redirect(url_for('music'))
     return render_template('index.html', form = form)
 
@@ -109,7 +115,7 @@ def list_files():
     music_files = []
     for filename in os.listdir(MUSIC_FOLDER):
         # only append mp3 or m4a files to music_list
-        if 'm4a' in filename or 'mp3' in filename:
+        if 'm4a' in filename or 'mp3' in filename or 'zip' in filename:
             path = os.path.join(MUSIC_FOLDER, filename)
             if os.path.isfile(path):
                 music_files.append(filename)
