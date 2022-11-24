@@ -48,6 +48,7 @@ def index():
     logging.info('Showing index page')
     form = UrlForm()
     if form.validate_on_submit():
+        # flash("Download in progress. Please wait")
         dl(form.spoturl.data)
         flash('Music succesfully downloaded to library.')
         # redirect(url_for('music'))

@@ -1,19 +1,17 @@
 import os
 import subprocess
 from flask import flash
-
-# class Spot:
-#     def dl():
-#         os.system(f"~/.local/bin/spotdl {spoturl}")
+from modules.zipsongs import download_all
 
 MUSIC_FOLDER = 'music'
 
 # MUSIC_FOLDER =  os.path.join(os.getcwd(), MUSIC_FOLDER)
 
 def dl(spoturl):
-    print("Download in progress. Please wait")
+    # flash("Download in progress. Please wait")
     os.chdir('music')
-    os.system(f"~/.local/bin/spotdl --format m4a --preload --threads 1 {spoturl}")
+    os.system(f"~/.local/bin/spotdl --m3u --format m4a --preload --threads 1 {spoturl}")
+    download_all()
     os.chdir("..")
     list_songs()
 
