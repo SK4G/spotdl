@@ -108,9 +108,11 @@ def list_files():
     logging.info('Listing files stored in the music folder.')
     music_files = []
     for filename in os.listdir(MUSIC_FOLDER):
-        path = os.path.join(MUSIC_FOLDER, filename)
-        if os.path.isfile(path):
-            music_files.append(filename)
+        # only append mp3 or m4a files to music_list
+        if 'm4a' in filename or 'mp3' in filename:
+            path = os.path.join(MUSIC_FOLDER, filename)
+            if os.path.isfile(path):
+                music_files.append(filename)
 
     return render_template('music.html', files=music_files)
 

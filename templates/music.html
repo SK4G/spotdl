@@ -13,12 +13,12 @@
             <hr>
             <div class="flex-container">
                 {% for file in files %}
-                {% if file !="music.zip" %}
+                <!-- {% if file !="music.zip" %} -->
                 <a href="{{ url_for('download', filename=file) }}">{{ file }}</a>
                 <br>
-                {% endif %}
+                <!-- {% endif %} -->
                 {% endfor %}
             </div>
-            
+
         </body>
     {% endblock %}
