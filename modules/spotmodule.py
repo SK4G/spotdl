@@ -42,6 +42,15 @@ def zip_dir(folder):
             archive.write(song)
     return None
 
+def zip_list(song_list: list, album_name: str):
+    os.chdir(MUSIC_FOLDER)
+    # save in parent folder with ../{filename.zip} notation
+    with zipfile.ZipFile(f"{album_name}.zip", mode="w") as archive:
+        for song in song_list:
+            print(song)
+            archive.write(song)
+    return None
+
 def dl(spoturl):
     # flash("Download in progress. Please wait")
     # shutil.rmtree(SPOTIFY_FOLDER)
