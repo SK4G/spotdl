@@ -5,7 +5,6 @@ import subprocess
 import shutil
 # from flask import flash
 
-
 MUSIC_FOLDER =  os.path.join(os.getcwd(), 'music')
 SPOTIFY_FOLDER =  os.path.join(os.getcwd(), 'spotify')
 
@@ -24,7 +23,7 @@ def move_files():
         dst_path = os.path.join(destination, f)
         shutil.move(src_path, dst_path)
 
-def zip_all(folder):
+def zip_dir(folder):
     song_list = []
     print(os.getcwd())
     print(SPOTIFY_FOLDER)
@@ -51,7 +50,7 @@ def dl(spoturl):
     os.system(f"~/.local/bin/spotdl --format m4a --preload --threads 4 {spoturl}")
     # zip spoturl songs
     os.chdir("..")
-    zip_all("spotify")
+    zip_dir("spotify")
     move_files()
 
     # list_songs()

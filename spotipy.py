@@ -5,16 +5,14 @@ from dotenv import load_dotenv
 load_dotenv()
 import flask
 from flask_sqlalchemy import SQLAlchemy
-import psycopg2
 from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
 from werkzeug.utils import secure_filename
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin
-from flask_login import LoginManager
+from flask_login import UserMixin, LoginManager, current_user, login_user, logout_user, login_required
 from modules.spotmodule import dl
 
 # [logging config
@@ -27,6 +25,13 @@ logging.basicConfig(format='%(asctime)s:%(levelname)s:%(filename)s:%(funcName)s:
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 db = SQLAlchemy(app)
+# user_loader must be in the same place login manager is instantiated
+# https://stackoverflow.com/a/44776737
+login = LoginManager(app)
+@login.user_loader
+def load_user(id):
+    return Person.query.get(int(id))
+login.login_view = 'login'
 app.secret_key = "secretpass"
 app.config['ALLOWED_EXTENSIONS'] = ['.mp3', '.m4a']
 app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024 # 20mb
@@ -61,6 +66,7 @@ def index():
     return render_template('index.html', form = form)
 
 @app.route('/upload', methods=['GET'])
+@login_required
 def upload():
     logging.info('Showing index page')
     return render_template('upload.html')
@@ -115,7 +121,7 @@ def list_files():
     music_files = []
     for filename in os.listdir(MUSIC_FOLDER):
         # only append mp3 or m4a files to music_list
-        if 'm4a' in filename or 'mp3' in filename or 'zip' in filename:
+        if '.m4a' in filename or '.mp3' in filename or '.zip' in filename:
             path = os.path.join(MUSIC_FOLDER, filename)
             if os.path.isfile(path):
                 music_files.append(filename)
@@ -131,13 +137,22 @@ class LoginForm(FlaskForm):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
-        flash('Login requested for user {}, remember_me={}'.format(
-            form.username.data, form.remember_me.data))
+        user = Person.query.filter_by(username=form.username.data).first()
+        if user is None or not user.check_password(form.password.data):
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+        login_user(user, remember=form.remember_me.data)
         return redirect(url_for('index'))
     return render_template('login.html', title='Sign In', form=form)
 
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
 
 class Person(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -164,8 +179,42 @@ class Song(db.Model):
     def __repr__(self):
         return f"{self.song_name}"
 
-# with app.app_context():
-#     db.create_all()
+class RegistrationForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    password2 = PasswordField(
+        'Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Register')
+
+    def validate_username(self, username):
+        user = Person.query.filter_by(username=username.data).first()
+        if user is not None:
+            raise ValidationError('Please use a different username.')
+
+    def validate_email(self, email):
+        user = Person.query.filter_by(email=email.data).first()
+        if user is not None:
+            raise ValidationError('Please use a different email address.')
+
+    @app.route('/register', methods=['GET', 'POST'])
+    def register():
+        if current_user.is_authenticated:
+            return redirect(url_for('index'))
+        form = RegistrationForm()
+        if form.validate_on_submit():
+            user = Person(username=form.username.data, email=form.email.data)
+            user.set_password(form.password.data)
+            db.session.add(user)
+            db.session.commit()
+            flash('Congratulations, you are now a registered user!')
+            return redirect(url_for('login'))
+        return render_template('register.html', title='Register', form=form)
 
 
-app.run(debug=False)
+
+with app.app_context():
+    db.create_all()
+
+
+# app.run(debug=False)
