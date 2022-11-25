@@ -23,7 +23,7 @@ def move_files():
         dst_path = os.path.join(destination, f)
         shutil.move(src_path, dst_path)
 
-def zip_dir(folder):
+def zip_dir(folder: str):
     song_list = []
     print(os.getcwd())
     print(SPOTIFY_FOLDER)
@@ -40,7 +40,6 @@ def zip_dir(folder):
         for song in song_list:
             print(song)
             archive.write(song)
-    return None
 
 def zip_list(song_list: list, album_name: str):
     os.chdir(MUSIC_FOLDER)
@@ -49,7 +48,6 @@ def zip_list(song_list: list, album_name: str):
         for song in song_list:
             print(song)
             archive.write(song)
-    return None
 
 def dl(spoturl):
     # flash("Download in progress. Please wait")
