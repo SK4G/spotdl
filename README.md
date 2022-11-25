@@ -1,5 +1,7 @@
 https://github.com/SK4G/spotdl
+
 https://docs.google.com/document/d/1tdWUZKESoKO_Y48A25rujtj6Ms31ao_JRo1CS7kG3AE/edit?usp=sharing
+
 https://spotdl.fly.dev
 
 Examples of things you enjoyed about or learned from this project
