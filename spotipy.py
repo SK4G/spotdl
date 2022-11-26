@@ -21,6 +21,7 @@ logging.basicConfig(format='%(asctime)s:%(levelname)s:%(filename)s:%(funcName)s:
                     level=logging.INFO)
 # logging config]
 
+MUSIC_FOLDER = os.path.join(os.getcwd(), 'data/music')
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
@@ -36,18 +37,6 @@ app.secret_key = "secretpass"
 app.config['ALLOWED_EXTENSIONS'] = ['.mp3', '.m4a']
 app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024 # 20mb
 
-# create music folder if it does not exist in app root dir
-MUSIC_FOLDER = 'music'
-if not os.path.exists(MUSIC_FOLDER):
-    os.makedirs(MUSIC_FOLDER, exist_ok=True)
-    
-# folder to temp download and zip spoturl songs
-SPOTURL_FOLDER = 'spotify'
-if not os.path.exists('spotify'):
-    os.makedirs('spotify', exist_ok=True)
-
-MUSIC_FOLDER =  os.path.join(os.getcwd(), MUSIC_FOLDER)
-
 class UrlForm(FlaskForm):
     spoturl = StringField('Spotify URL', validators=[DataRequired()])
     submit = SubmitField('Download')
@@ -61,8 +50,8 @@ def index():
         # flash("Download in progress. Please wait")
         dl(form.spoturl.data)
         flash('Music succesfully downloaded to library. \
-            spotify.zip contains all files from requested Spotify URL')
-        # redirect(url_for('music'))
+            Individual files can be downloaded from the Music link')
+        return redirect(url_for('download', filename='spotify.zip'))
     return render_template('index.html', form = form)
 
 @app.route('/upload', methods=['GET'])
