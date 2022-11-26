@@ -5,6 +5,10 @@ kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
 
+[mount]
+  source = "data"
+  destination = "data"
+
 [build]
   builder = "paketobuildpacks/builder:base"
 
