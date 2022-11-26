@@ -36,18 +36,6 @@ app.secret_key = "secretpass"
 app.config['ALLOWED_EXTENSIONS'] = ['.mp3', '.m4a']
 app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024 # 20mb
 
-# create music folder if it does not exist in app root dir
-MUSIC_FOLDER = 'music'
-if not os.path.exists(MUSIC_FOLDER):
-    os.makedirs(MUSIC_FOLDER, exist_ok=True)
-    
-# folder to temp download and zip spoturl songs
-SPOTURL_FOLDER = 'spotify'
-if not os.path.exists('spotify'):
-    os.makedirs('spotify', exist_ok=True)
-
-MUSIC_FOLDER =  os.path.join(os.getcwd(), MUSIC_FOLDER)
-
 class UrlForm(FlaskForm):
     spoturl = StringField('Spotify URL', validators=[DataRequired()])
     submit = SubmitField('Download')
@@ -62,7 +50,7 @@ def index():
         dl(form.spoturl.data)
         flash('Music succesfully downloaded to library. \
             spotify.zip contains all files from requested Spotify URL')
-        # redirect(url_for('music'))
+        redirect(url_for('download/spotify.zip'))
     return render_template('index.html', form = form)
 
 @app.route('/upload', methods=['GET'])
