@@ -21,6 +21,7 @@ logging.basicConfig(format='%(asctime)s:%(levelname)s:%(filename)s:%(funcName)s:
                     level=logging.INFO)
 # logging config]
 
+MUSIC_FOLDER = os.path.join(os.getcwd(), 'data/music')
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
@@ -49,8 +50,8 @@ def index():
         # flash("Download in progress. Please wait")
         dl(form.spoturl.data)
         flash('Music succesfully downloaded to library. \
-            spotify.zip contains all files from requested Spotify URL')
-        redirect(url_for('download/spotify.zip'))
+            Individual files can be downloaded from the Music link')
+        return redirect(url_for('download', filename='spotify.zip'))
     return render_template('index.html', form = form)
 
 @app.route('/upload', methods=['GET'])
