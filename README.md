@@ -27,7 +27,7 @@ Technical Requirements
   - Flask server
   - Postgress DB
   - User login
-  - Beautification
+  - Used spotdl as REST API
 
 Stretch Features
   - KooDb3sIr3EwE9j This stretch feature allows users to upload and download music files to the site. Users can enter a Spotify URL and download a song. Users can also upload an mp4/m4a file from their local computer.
