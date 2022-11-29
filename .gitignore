@@ -1,6 +1,5 @@
 test.py
 *.m3u
-*.txt
 *.sh
 *.spotdl
 *.mp3

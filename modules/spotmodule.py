@@ -31,7 +31,7 @@ def move_files():
 def zip_dir():
     song_list = []
 
-    # append mp3 or m4a files in specified directory
+    # append mp3 or m4a files in specified directory to song_list
     for entry in os.scandir(SPOTIFY_FOLDER):
         if entry.is_file():
             if ('.mp3' in entry.name) or ('.m4a' in entry.name) or ('.zip' in entry.name):
