@@ -14,14 +14,8 @@ Examples of things you didn’t enjoy or wanted to learn from this project
     Due to this we had to use spotdl from the command line with os.system(spotd --args url).
     https://stackoverflow.com/questions/65240392/how-can-i-use-spotdl-inside-python
     https://github.com/ritiek/spotify-downloader/blob/master/docs/source/api.rst
-  - Due to time constraints, did not look into how to parse metadata from a spotify url. 
-    To bypass this, regardless of whether songs are already downloaded to server or not, they are downloaded to a temporary directory, to separate them from the already downloaded songs.
-    Afterwards, a zip archive of the songs from the spotify url is created, then songs and zip is moved to the global music folder. 
-  - Would have liked to parse the songs in a given spotify url and create a list in format "{artists} - {title}.{output-ext}"
-    With this list the songs could have been checked to see if they already existed in the global music folder. 
-    Then a zip archive based on the song list would have been created, with a unique zip {album}.zip name. As is the archive name is always spotify.zip, always being overwritten per url download request.
-    An unused function was left for this functionality in  spotmodule.py      zip_list(song_list: list, album_name: str):
-  - Would have liked to dynamically embed a music player based on spotify url or a music player based on the server music library. 
+  - Would have liked to dynamically embed a music player based on spotify url or a music player based on the server music library.
+  - Figure out logic to store zip files for x amount of time or per user session.
   
 Technical Requirements
   - Flask server  - Luiz
