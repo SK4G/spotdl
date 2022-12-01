@@ -3,6 +3,8 @@ import zipfile
 import os
 import subprocess
 import shutil
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
 # from flask import flash
 
 # create music folder if it does not exist in app root dir
@@ -67,3 +69,34 @@ def list_songs():
     os.chdir('/data/music')
     os.system(f"for file in *.mp3 do echo $file done")
     subprocess.run("for song in *.m*; do echo $song; done", shell=True, check=True)
+
+def make_music_list():
+
+    music_list = []
+
+    CLIENT_ID = os.getenv("SPOTIFY_ID_KEY")
+    CLIRENT_SECRET = os.getenv("SPOTIFY_SECRET_KEY")
+    
+    sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(CLIENT_ID, CLIRENT_SECRET))
+
+    album_id = "https://open.spotify.com/album/64LkgCfNbLqjclQYCTid8L?si=Sn-GdwvVSB6XKWEONdtQAg"
+    album_title = sp.album(album_id)
+
+    #results = sp.album_tracks(album_id, limit, offset, market)
+
+    album = sp.album_tracks(album_id)
+
+    album_title = album_title['name']
+
+    for songs in album['items']:
+        music_list.append(songs["artists"][0]["name"] + " - " + songs['name'] + ".m4a")
+        
+    #print(album_title)
+    #print(music_list) 
+
+    zip_list(music_list, album_title)
+
+
+    
+
+make_music_list()
