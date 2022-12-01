@@ -5,6 +5,8 @@ import subprocess
 import shutil
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())  # To load API keys from .env
 # from flask import flash
 
 # create music folder if it does not exist in app root dir
@@ -36,7 +38,7 @@ def zip_dir():
     # append mp3 or m4a files in specified directory to song_list
     for entry in os.scandir(SPOTIFY_FOLDER):
         if entry.is_file():
-            if ('.mp3' in entry.name) or ('.m4a' in entry.name) or ('.zip' in entry.name):
+            if ('.mp3' in entry.name) or ('.m4a' in entry.name):
                 print(entry.name)
                 song_list.append(entry.name)
 
@@ -58,10 +60,11 @@ def zip_list(song_list: list, album_name: str):
 
 def dl(spoturl):
     # flash("Download in progress. Please wait")
-    os.chdir(SPOTIFY_FOLDER)
+    # os.chdir(SPOTIFY_FOLDER)
+    os.chdir(MUSIC_FOLDER)
     os.system(f"~/.local/bin/spotdl --format m4a --preload --threads 4 {spoturl}")
-    zip_dir()
-    move_files()
+    make_song_list(spoturl)
+    # move_files()
 
     # list_songs()
 
@@ -70,33 +73,22 @@ def list_songs():
     os.system(f"for file in *.mp3 do echo $file done")
     subprocess.run("for song in *.m*; do echo $song; done", shell=True, check=True)
 
-def make_music_list(spoturl):
+def make_song_list(spoturl):
+    song_list = []
 
-    music_list = []
-
-    CLIENT_ID = os.getenv("SPOTIFY_ID_KEY")
-    CLIRENT_SECRET = os.getenv("SPOTIFY_SECRET_KEY")
+    CLIENT_ID = os.getenv("SPOTIPY_CLIENT_ID")
+    SECRET_KEY = os.getenv("SPOTIFY_SECRET_KEY")
     
-    sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(CLIENT_ID, CLIRENT_SECRET))
+    sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(CLIENT_ID, SECRET_KEY))
 
-    
     album_title = sp.album(spoturl)
-
-    #results = sp.album_tracks(album_id, limit, offset, market)
-
     album = sp.album_tracks(spoturl)
-
     album_title = album_title['name']
 
     for songs in album['items']:
-        music_list.append(songs["artists"][0]["name"] + " - " + songs['name'] + ".m4a")
+        song_list.append(songs["artists"][0]["name"] + " - " + songs['name'] + ".m4a")
         
     #print(album_title)
-    #print(music_list) 
+    #print(song_list) 
 
-    zip_list(music_list, album_title)
-
-
-    
-
-make_music_list()
+    zip_list(song_list, album_title)
