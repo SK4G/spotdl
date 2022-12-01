@@ -70,7 +70,7 @@ def list_songs():
     os.system(f"for file in *.mp3 do echo $file done")
     subprocess.run("for song in *.m*; do echo $song; done", shell=True, check=True)
 
-def make_music_list():
+def make_music_list(spoturl):
 
     music_list = []
 
@@ -79,12 +79,12 @@ def make_music_list():
     
     sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(CLIENT_ID, CLIRENT_SECRET))
 
-    album_id = "https://open.spotify.com/album/64LkgCfNbLqjclQYCTid8L?si=Sn-GdwvVSB6XKWEONdtQAg"
-    album_title = sp.album(album_id)
+    
+    album_title = sp.album(spoturl)
 
     #results = sp.album_tracks(album_id, limit, offset, market)
 
-    album = sp.album_tracks(album_id)
+    album = sp.album_tracks(spoturl)
 
     album_title = album_title['name']
 
