@@ -24,10 +24,10 @@ Examples of things you didn’t enjoy or wanted to learn from this project
   - Would have liked to dynamically embed a music player based on spotify url or a music player based on the server music library. 
   
 Technical Requirements
-  - Flask server
-  - Postgress DB
-  - User login
-  - Used spotdl as REST API
+  - Flask server  - Luiz
+  - Postgress DB  - Luiz
+  - User login    - Luiz
+  - Used spotipy as REST API - Brandon
 
 Stretch Features
   - KooDb3sIr3EwE9j This stretch feature allows users to upload and download music files to the site. Users can enter a Spotify URL and download a song. Users can also upload an mp4/m4a file from their local computer.
